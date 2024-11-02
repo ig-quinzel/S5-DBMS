@@ -1,0 +1,32 @@
+CREATE TABLE ACCOUNTS(NO INT PRIMARY KEY,BALANCE INT);
+INSERT INTO ACCOUNTS VALUES(12345,3000);
+INSERT INTO ACCOUNTS VALUES(45678,4000);
+INSERT INTO ACCOUNTS VALUES(33330,700);
+SELECT * FROM ACCOUNTS;
+
+SET SERVEROUTPUT ON;
+ACCEPT acc NUMBER PROMPT 'ENTER ACC NUMBER';
+ACCEPT cred NUMBER PROMPT 'ENTER CREDIT AMOUNT';
+ACCEPT deb NUMBER PROMPT 'ENTER DEBIT AMOUNT';
+
+DECLARE
+    bal NUMBER;
+    credit NUMBER(20) := &cred;
+    debit NUMBER(20) := &deb;
+BEGIN
+    -- Update balance after debit
+    UPDATE ACCOUNTS SET BALANCE = BALANCE - debit WHERE NO = &acc;
+
+    -- Update balance after credit
+    UPDATE ACCOUNTS SET BALANCE = BALANCE + credit WHERE NO = &acc;
+
+    -- Retrieve and display the final balance
+    SELECT BALANCE INTO bal FROM ACCOUNTS WHERE NO = &acc;
+    DBMS_OUTPUT.PUT_LINE('BALANCE: ' || bal);
+
+    -- Check if the balance has reached the minimum threshold
+    IF bal = 500 THEN
+        DBMS_OUTPUT.PUT_LINE('MIN REACHED');
+    END IF;
+END;
+/
