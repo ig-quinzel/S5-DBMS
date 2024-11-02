@@ -1,0 +1,49 @@
+-- Create the STUD table
+CREATE TABLE STUD (
+    NO INT PRIMARY KEY,
+    NAME VARCHAR(20),
+    S1 NUMBER,
+    S2 NUMBER
+);
+
+-- Enable output for DBMS
+SET SERVEROUTPUT ON;
+
+-- Create the trigger
+CREATE OR REPLACE TRIGGER TRIG
+BEFORE UPDATE OR DELETE OR INSERT ON STUD
+FOR EACH ROW
+DECLARE
+    msg VARCHAR(100);
+BEGIN
+    IF INSERTING THEN 
+        msg := 'INSERTING ' || :NEW.NAME;
+    ELSIF UPDATING THEN
+        IF UPDATING('NAME') THEN
+            msg := 'UPDATING NAME TO ' || :NEW.NAME;
+        ELSIF UPDATING('NO') THEN
+            msg := 'UPDATING NO TO ' || :NEW.NO;
+        ELSIF UPDATING('S1') THEN
+            msg := 'UPDATING S1 TO ' || :NEW.S1;
+        ELSIF UPDATING('S2') THEN
+            msg := 'UPDATING S2 TO ' || :NEW.S2;
+        END IF;
+    ELSIF DELETING THEN
+        msg := 'DELETING ' || :OLD.NAME;
+    END IF;
+    DBMS_OUTPUT.PUT_LINE(msg);
+END TRIG;
+/
+
+-- Insert a record into STUD
+INSERT INTO STUD VALUES (6, 'HEH', 5.6, 7.8);
+
+-- Update the record in STUD
+UPDATE STUD SET NAME = 'SUS' WHERE NO = 6;
+UPDATE STUD SET NO = 7 WHERE NO = 6;
+UPDATE STUD SET S1 = 7.5 WHERE NO = 7;
+UPDATE STUD SET S2 = 7.5 WHERE NO = 7;
+DELETE FROM STUD WHERE NO=7;
+
+
+
