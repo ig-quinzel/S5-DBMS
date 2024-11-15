@@ -12,29 +12,32 @@ INSERT INTO customer_balance (CID, bal) VALUES (107, 78030);
 select * from customer_balance;
 
 SET SERVEROUTPUT ON;
-DECLARE 
+
+DECLARE
+  MSG VARCHAR(20);
   CURSOR CUR IS 
     SELECT * FROM customer_balance;
   CUR1 CUR%ROWTYPE;
-  MSG VARCHAR(20);
-BEGIN
   
-  DBMS_OUTPUT.PUT_LINE('CID       BAL        CAT');
-  OPEN CUR;
-   LOOP
-    FETCH CUR INTO CUR1;
-    EXIT when CUR%NOTFOUND;
-    
-    IF CUR1.bal>50000 then 
+ PROCEDURE CATEGORY(CID NUMBER,BAL NUMBER) IS
+ BEGIN
+     IF bal>50000 then 
       MSG:='PLATINUM';
-    ELSIF CUR1.BAL<=50000 AND CUR1.BAL>10000 then
+     ELSIF BAL<=50000 AND BAL>10000 then
       MSG:='GOLD';
-    ELSE 
+     ELSE 
       MSG:='SILVER';
-    end IF;
-    DBMS_OUTPUT.PUT_LINE(CUR1.CID  ||'      '||  CUR1.BAL   ||'      ' || MSG);
-   END LOOP;
-  CLOSE CUR;
+     end IF;
+     DBMS_OUTPUT.PUT_LINE(CID  ||'      '|| BAL   ||'      ' || MSG);
+  END CATEGORY;
+BEGIN
+   DBMS_OUTPUT.PUT_LINE('CID       BALANCE   CATEGORY');
+   OPEN CUR;
+    LOOP
+     FETCH CUR INTO CUR1;
+     EXIT when CUR%NOTFOUND;
+     CATEGORY(CUR1.CID,CUR1.BAL);
+    END LOOP;
+   CLOSE CUR;
 END;
 /
-
