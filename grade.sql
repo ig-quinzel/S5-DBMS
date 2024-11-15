@@ -1,35 +1,31 @@
-CREATE TABLE STUD(NO INT PRIMARY KEY,NAME varchar(20),S1 number,S2 number);
-INSERT INTO STUD VALUES(1,'NAN',8,7);
-INSERT INTO STUD VALUES(2,'SRA',6.7,8.9);
-INSERT INTO STUD VALUES(3,'ASWA',7.5,8.9);
-SELECT * FROM STUD;
+CREATE TABLE std_honors (
+rollno int PRIMARY KEY,
+name VARCHAR(30),
+s1 NUMBER,
+s2 NUMBER
+);
+INSERT INTO std_honors VALUES (52, 'Bob', 8.5,8.6);
+INSERT INTO std_honors VALUES (53, 'Charlie', 7, 4);
+INSERT INTO std_honors VALUES (51, 'Alice', 5.9, 2.9);
+INSERT INTO std_honors VALUES (57, 'Grace', 7, 8);
+select * from std_honors;
 
 SET SERVEROUTPUT ON;
-
-DECLARE 
-  CURSOR cur IS
-    SELECT NO,NAME,S1,S2
-    FROM STUD
-    WHERE (S1+S2)>12
-    ORDER BY NO;
-    
-  cur1 cur%ROWTYPE;
-  high number;
-    
+DECLARE
+ CURSOR CUR is
+  SELECT * FROM std_honors WHERE (S1+S2)>12 order BY rollno;
+ CUR1 CUR%ROWTYPE;
+ HIGH NUMBER;
 BEGIN
-    OPEN cur;
-    
-    LOOP
-     FETCH cur INTO cur1;
-     EXIT WHEN cur%NOTFOUND;
-     
-     high:=GREATEST(cur1.S1,cur1.S2);
-     DBMS_OUTPUT.PUT_LINE(
-     'ROLL:'||cur1.NO||
-     'NAME:'||cur1.NAME||
-     'high:'||high);
-    END LOOP;
-
-    CLOSE cur;
+ DBMS_OUTPUT.PUT_LINE('no   NAME      S1      S2   HIGHEST');
+ OPEN CUR;
+  LOOP
+   FETCH CUR INTO CUR1;
+   EXIT WHEN CUR%NOTFOUND;
+   HIGH:=GREATEST(CUR1.S1,CUR1.S2);
+   DBMS_OUTPUT.PUT_LINE(CUR1.rollno||'    '||CUR1.NAME||'     '||CUR1.S1||'     '||CUR1.S2||'    '||HIGH);
+  END LOOP;
+ CLOSE CUR;
 END;
 /
+  
